@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Restaurante</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Carta de Restaurante</h1>
+        <nav>
+            <ul>
+                <li><a href="#" id="carta">Carta</a></li>
+                <li><a href="#" id="favoritos">Tus Favoritos</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="filters-container">
+            <div class="filter-select">
+                <label for="filter-dropdown">Filtros de búsqueda:</label>
+                <select id="filter-dropdown">
+                    <option value="todos">Todos</option>
+                    <option value="vegano">Vegano</option>
+                    <option value="celiaco">Celiaco</option>
+                    <option value="lactosa">Intolerante a la lactosa</option>
+                </select>
+            </div>
+            <div class="sort-select">
+                <label for="sort-dropdown">Ordenar por precio:</label>
+                <select id="sort-dropdown">
+                    <option value="ascendente">Ascendente</option>
+                    <option value="descendente">Descendente</option>
+                </select>
+            </div>
+        </div>
+        <div id="menu" class="contenedor-menu">
+            <!-- Aquí se cargarán los platos del menú -->
+        </div>
+        <div id="favoritos-lista" class="contenedor-favoritos" style="display:none;">
+            <!-- Aquí se cargarán los platos favoritos -->
+        </div>
+        <p id="sin-favoritos" style="display:none;">Aún no tienes ningún plato marcado como favorito.</p>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
