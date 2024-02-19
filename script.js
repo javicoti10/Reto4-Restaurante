@@ -135,10 +135,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Función para renderizar los platos en la carta
     function renderMenuItems(items) {
         menuContainer.innerHTML = "";
+        let count = 0;
         items.forEach(item => {
             if (item.intolerance.includes(filterDropdown.value) || filterDropdown.value === "todos") {
                 const menuItem = createMenuItem(item);
                 menuContainer.appendChild(menuItem);
+                count++;
+               
+                
             }
         });
     }
