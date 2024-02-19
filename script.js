@@ -57,30 +57,56 @@ document.addEventListener("DOMContentLoaded", function() {
     const sinFavoritosMessage = document.getElementById("sin-favoritos");
     const filterDropdown = document.getElementById("filter-dropdown");
     const sortDropdown = document.getElementById("sort-dropdown");
+    const cartaLink = document.getElementById("carta");
+    const favoritosLink = document.getElementById("favoritos");
 
     // Cargar la carta inicial
     renderMenuItems(menuItems);
 
-    // Manejar los clics en los enlaces de navegación
-    document.getElementById("carta").addEventListener("click", function(event) {
+    // Event listener para el filtro
+    filterDropdown.addEventListener("change", function() {
+        applyFilters();
+        // Guardar el filtro seleccionado en localStorage
+        localStorage.setItem("filtroSeleccionado", filterDropdown.value);
+    });
+
+    // Event listener para ordenar por precio
+    sortDropdown.addEventListener("change", function() {
+        applySort();
+    });
+
+    // Event listener para navegar a la carta
+    cartaLink.addEventListener("click", function(event) {
         event.preventDefault();
-        renderMenuItems(menuItems);
         toggleVisibility(menuContainer, true);
         toggleVisibility(favoritesContainer, false);
     });
 
-    document.getElementById("favoritos").addEventListener("click", function(event) {
+    // Event listener para navegar a los favoritos
+    favoritosLink.addEventListener("click", function(event) {
         event.preventDefault();
         renderFavorites(menuItems);
         toggleVisibility(favoritesContainer, true);
         toggleVisibility(menuContainer, false);
     });
 
-    // Event listener para el filtro
-    filterDropdown.addEventListener("change", applyFilters);
+    // Comprobar si hay filtros guardados en localStorage y aplicarlos
+    const filtroGuardado = localStorage.getItem("filtroSeleccionado");
+    if (filtroGuardado) {
+        filterDropdown.value = filtroGuardado;
+        applyFilters();
+    }
 
-    // Event listener para ordenar por precio
-    sortDropdown.addEventListener("change", applySort);
+    // Comprobar si hay platos favoritos guardados en localStorage y marcarlos como favoritos
+    const favoritosGuardados = JSON.parse(localStorage.getItem("platosFavoritos"));
+    if (favoritosGuardados) {
+        menuItems.forEach(item => {
+            if (favoritosGuardados.includes(item.name)) {
+                item.favorite = true;
+            }
+        });
+        renderMenuItems(menuItems);
+    }
 
     // Función para aplicar filtros
     function applyFilters() {
@@ -110,8 +136,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function renderMenuItems(items) {
         menuContainer.innerHTML = "";
         items.forEach(item => {
-            const menuItem = createMenuItem(item);
-            menuContainer.appendChild(menuItem);
+            if (item.intolerance.includes(filterDropdown.value) || filterDropdown.value === "todos") {
+                const menuItem = createMenuItem(item);
+                menuContainer.appendChild(menuItem);
+            }
         });
     }
 
@@ -152,8 +180,17 @@ document.addEventListener("DOMContentLoaded", function() {
         const name = event.target.dataset.name;
         const item = menuItems.find(item => item.name === name);
         item.favorite = !item.favorite;
-        renderMenuItems(menuItems);
-        renderFavorites(menuItems);
+        // Actualizar LocalStorage con los platos favoritos
+        const favoritosActualizados = menuItems.filter(item => item.favorite).map(item => item.name);
+        localStorage.setItem("platosFavoritos", JSON.stringify(favoritosActualizados));
+        // Si estamos en la vista de favoritos, volver a renderizar
+        if (favoritesContainer.style.display === "block") {
+            renderFavorites(menuItems);
+        }
+        // Si estamos en la vista de carta, volver a renderizar
+        if (menuContainer.style.display === "block") {
+            renderMenuItems(menuItems);
+        }
     }
 
     // Función para cambiar la visibilidad de un elemento
